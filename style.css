@@ -1,0 +1,249 @@
+ 
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #080605;
+    color: #f5f5f4;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, .font-heading {
+    font-family: 'Playfair Display', serif;
+}
+
+.glass-panel {
+    background: rgba(20, 17, 15, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+    background: rgba(30, 26, 23, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: rgba(212, 175, 55, 0.7);
+    background: rgba(45, 39, 35, 0.6);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+}
+
+.glass-input {
+    background: rgba(10, 8, 7, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+    border-color: #d4af37;
+    background: rgba(10, 8, 7, 0.8);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.35);
+}
+
+.calendar-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #d4af37 rgba(20, 17, 15, 0.3);
+    cursor: grab;
+    user-select: none;
+}
+
+.calendar-scroll:active {
+    cursor: grabbing;
+}
+
+.calendar-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.calendar-scroll::-webkit-scrollbar-track {
+    background: rgba(20, 17, 15, 0.4);
+    border-radius: 3px;
+}
+
+.calendar-scroll::-webkit-scrollbar-thumb {
+    background: #d4af37;
+    border-radius: 3px;
+}
+
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(20, 17, 15, 0.3);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d4af37;
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+/* ===== Correções ===== */
+html, body { min-height: 100%; }
+
+#bg-canvas {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glass-card { transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease; }
+
+/* hover "grudado" em telas de toque */
+.glass-card:hover { border-color: rgba(255, 255, 255, 0.1); background: rgba(30, 26, 23, 0.4); box-shadow: none; }
+@media (hover: hover) {
+    .glass-card:hover {
+        border-color: rgba(212, 175, 55, 0.7);
+        background: rgba(45, 39, 35, 0.6);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+    }
+}
+
+/* foco visível para teclado */
+button:focus-visible, a:focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 2px;
+}
+
+button:disabled { cursor: not-allowed; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+/* ===== Informações / horário de funcionamento ===== */
+.hours-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.25rem; }
+.hours-list li {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.55rem 0.75rem; border-radius: 0.75rem;
+    border: 1px solid transparent; transition: background 0.3s ease, border-color 0.3s ease;
+}
+.hours-list li.is-today { background: rgba(212, 175, 55, 0.12); border-color: rgba(212, 175, 55, 0.4); color: #f3e5ab; font-weight: 600; }
+.hours-list li .closed { color: #a8a29e; }
+
+.status-badge {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.3rem 0.7rem; border-radius: 999px; border: 1px solid; white-space: nowrap;
+}
+.status-open { color: #34d399; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.45); }
+.status-closed { color: #fca5a5; background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.4); }
+
+/* ===== Aviso (toast) ===== */
+.toast {
+    position: fixed; left: 50%; bottom: 1.5rem; z-index: 50;
+    transform: translate(-50%, 140%); opacity: 0; pointer-events: none;
+    max-width: calc(100% - 2rem); padding: 0.75rem 1.25rem; border-radius: 0.9rem;
+    background: rgba(20, 17, 15, 0.92); color: #f5f5f4; font-size: 0.8rem;
+    border: 1px solid rgba(212, 175, 55, 0.5); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    transition: transform 0.35s ease, opacity 0.35s ease;
+}
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+@media (max-width: 380px) {
+    .hours-list li { padding: 0.5rem 0.6rem; }
+}
+
+/* ===== Visual premium ===== */
+html { scroll-behavior: smooth; }
+body::after { /* vinheta suave */
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.10), transparent 55%),
+                radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.55), transparent 60%);
+}
+
+/* logo e títulos com brilho dourado */
+header .font-heading, .hero-title span, .gold-text {
+    background: linear-gradient(100deg, #aa8c2c 0%, #f3e5ab 45%, #d4af37 70%, #f3e5ab 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+
+/* hero */
+.hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase;
+    color: #d4af37; padding: 0.35rem 0.9rem; border-radius: 999px;
+    border: 1px solid rgba(212,175,55,0.4); background: rgba(212,175,55,0.08);
+}
+.hero-title {
+    margin: 1rem 0 0.6rem; font-size: clamp(1.9rem, 6vw, 2.6rem); line-height: 1.12; font-weight: 800;
+    color: #fff; text-shadow: 0 4px 24px rgba(0,0,0,0.6);
+}
+.hero-sub { color: #a8a29e; font-size: 0.85rem; line-height: 1.6; max-width: 30rem; margin: 0 auto; }
+.hero-stats { list-style: none; display: flex; justify-content: center; gap: 0.75rem; margin: 1.4rem 0 0; padding: 0; }
+.hero-stats li {
+    flex: 1; max-width: 8rem; padding: 0.7rem 0.4rem; border-radius: 1rem;
+    background: rgba(30,26,23,0.5); border: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-direction: column; gap: 0.1rem;
+}
+.hero-stats strong { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: #f3e5ab; }
+.hero-stats strong i { font-size: 0.7rem; margin-left: 0.2rem; color: #d4af37; }
+.hero-stats span { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: #a8a29e; }
+
+/* cartão principal com filete dourado no topo */
+main .glass-panel { position: relative; }
+main .glass-panel::before {
+    content: ""; position: absolute; top: 0; left: 12%; right: 12%; height: 2px; z-index: 1;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+/* cartões de serviço/pagamento: levanta ao passar o mouse */
+.glass-card { border-radius: 1rem; }
+@media (hover: hover) {
+    .glass-card:hover { transform: translateY(-2px); }
+}
+.glass-card:active { transform: scale(0.99); }
+
+/* campos */
+.glass-input::placeholder { color: #78716c; }
+.glass-input { border-radius: 0.9rem; }
+
+/* botão principal: degradê + brilho que passa */
+#btn-next:not(:disabled), button[onclick="sendToWhatsApp()"] {
+    position: relative; overflow: hidden;
+}
+#btn-next:not(:disabled) {
+    background-image: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa8c2c 100%);
+}
+#btn-next:not(:disabled)::after, button[onclick="sendToWhatsApp()"]::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: skewX(-20deg); animation: shine 3.2s ease-in-out infinite;
+}
+@keyframes shine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+#btn-next:not(:disabled):hover { transform: translateY(-1px); filter: brightness(1.06); }
+
+/* logo do cabeçalho pulsa de leve */
+header .rounded-full.bg-barber-gold { animation: glow 3.5s ease-in-out infinite; }
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0.35); }
+    50% { box-shadow: 0 0 0 10px rgba(212,175,55,0); }
+}
+
+footer { border-top: 1px solid rgba(212,175,55,0.15); margin: 0 auto; width: min(36rem, 90%); }
+
+@media (prefers-reduced-motion: reduce) {
+    #btn-next::after, button[onclick="sendToWhatsApp()"]::after, header .rounded-full { animation: none !important; }
+    html { scroll-behavior: auto; }
+}
